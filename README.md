@@ -1,6 +1,6 @@
-# Online Timbre Dissimilarity
+# Online Timbre Dissimilarity & Semantics
 
-A web-app for conducting an online timbre dissimilarity study, following the methodology set out in [1]. Built around [lab.js](https://lab.js.org/) and [Express](https://expressjs.com/)
+A web-app for conducting an online timbre dissimilarity study, with a further semantic rating component. The dissimilarity section follows the methodology set out in [1]. Built around [lab.js](https://lab.js.org/) and [Express](https://expressjs.com/)
 
 ## Installation
 
