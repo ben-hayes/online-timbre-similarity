@@ -102,6 +102,8 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
    * @param {*} template The HTML template which populates the screens.
    * @param {*} screenName The name used in the datastore.
    * @param {*} audioFilePairs An object containing audio file names.
+   * @param {*} startIndex The integer index at which to start the trial counter
+   * @param {*} totalTrials The total number of trials
    * @param {*} practiceReminderTemplate An optional template containing the
    *  HTML used to populate the reminder screen shown if a user rates
    *  identical sounds anything other than 0.
@@ -111,7 +113,16 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
       template,
       screenName,
       audioFilePairs,
+      startIndex,
+      totalTrials,
       practiceReminderTemplate) {
+    console.log(startIndex);
+    let index = 1;
+    for (const audioFilePair of audioFilePairs) {
+      audioFilePair.trial_number = startIndex + index;
+      audioFilePair.total_trials = totalTrials;
+      index += 1;
+    }
     const block = new lab.flow.Loop({
       template: screens.dissimilarityScreen.bind(
           undefined,
@@ -148,6 +159,8 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
         templates.dissimilarity_rating,
         'practice_dissimilarity',
         audioFilePairs,
+        0,
+        audioFilePairs.length,
         templates.practice_reminder);
     const block = new lab.flow.Sequence({
       content: [explanation1, explanation2, practiceBlock],
@@ -186,10 +199,13 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
       const innerBlockAudioPairs = audioFilePairs.slice(
           i * ratingsPerBlock,
           (i + 1) * ratingsPerBlock);
+      const startIndex = i * ratingsPerBlock;
       const thisInnerBlock = dissimilarityInnerBlock(
           templates.dissimilarity_rating,
           'dissimilarity',
-          innerBlockAudioPairs);
+          innerBlockAudioPairs,
+          startIndex,
+          audioFilePairs.length);
       blockScreens.push(thisInnerBlock);
 
       if (i < numberOfInnerBlocks - 1) {

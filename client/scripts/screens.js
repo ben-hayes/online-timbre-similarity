@@ -41,6 +41,8 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
         {
           'audio_src_a': audioFiles.audio_src_a,
           'audio_src_b': audioFiles.audio_src_b,
+          'trial_number': audioFiles.trial_number,
+          'total_trials': audioFiles.total_trials,
         });
 
     const labScreen = new lab.html.Form({

@@ -1,4 +1,4 @@
 {
-    "dissimilarity_instructions": "Please listen carefully to the sequence of two sounds and enter a number in the box below.<br/><em>Press R to listen to the sounds again</em>",
-    "next_screen_instructions": "<b>Then press enter to continue</br>"
+    "dissimilarity_instructions": "Please listen carefully to the sequence of two sounds and enter a number in the box below.<br/>Remember to use the same scale throughout, and enter 0 if the sounds are identical.<br/><em>Press R to listen to the sounds again</em>",
+    "next_screen_instructions": "<b>Then press enter to continue</b></br>"
 }
