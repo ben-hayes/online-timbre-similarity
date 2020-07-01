@@ -248,11 +248,17 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     const blockScreens = [explanationScreen];
 
     const templateParameters = [];
+    let index = 0;
     for (const audioFile of audioFiles) {
-      templateParameters.push({audio_file: audioFile});
+      templateParameters.push({
+        audio_file: audioFile,
+        trial_number: index,
+        total_trials: audioFiles.length,
+      });
+      index += 1;
     }
 
-    const descriptorsPerPage = 6;
+    const descriptorsPerPage = 8;
     const semanticRatings = new lab.flow.Loop({
       template: screens.semanticScreen.bind(
           undefined,

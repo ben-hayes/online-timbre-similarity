@@ -188,7 +188,9 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
       audioFile) {
     const populatedTemplate = templating.populateScreenTemplate(
         template,
-        {'audio_src': audioFile.audio_file});
+        {
+          audio_src: audioFile.audio_file,
+        });
 
     let playing = false;
     const playAudio = function() {
@@ -228,6 +230,8 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
           populatedTemplate,
           {
             descriptor_rows: pageRows.join('\n'),
+            trial_number: audioFile.trial_number * numPages + i + 1,
+            total_trials: audioFile.total_trials * numPages,
           },
       );
       const labScreen = new lab.html.Form({
