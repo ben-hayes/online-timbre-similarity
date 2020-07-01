@@ -164,6 +164,103 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
   }
 
   /**
+   * Creates a sequence of lab.html.Forms which function as semantic rating
+   * screens.
+   *
+   * @param {*} template The populated HTML template for the screen
+   * @param {*} rowTemplate The HTML template for each descriptor row
+   * @param {*} screenName The name to be recorded in the datastore
+   * @param {*} descriptors The list of semantic descriptors
+   * @param {*} descriptorsPerPage The number of descriptors to display per
+   *  rating screen
+   * @param {*} audioFile Object containing the audio file for the trial
+   * @return {lab.core.Component} The populated lab.js component with all
+   *  behaviour. This is either a lab.flow.Sequence.
+   */
+  function semanticScreen(
+      template,
+      rowTemplate,
+      screenName,
+      descriptors,
+      descriptorsPerPage,
+      audioFile) {
+    const populatedTemplate = templating.populateScreenTemplate(
+        template,
+        {'audio_src': audioFile.audio_file});
+
+    let playing = false;
+    const playAudio = function() {
+      const playCountElement =
+            document.getElementById('stimulus_play_count');
+      const currentPlayCount = parseInt(playCountElement.value);
+      playCountElement.value = currentPlayCount + 1;
+
+      playing = true;
+      const player = document.getElementById('audio');
+      player.onended = () => {
+        playing = false;
+      };
+      player.play();
+    };
+
+    const numPages = Math.ceil(descriptors.length / descriptorsPerPage);
+    const pages = [];
+    for (let i = 0; i < numPages; i++) {
+      const startIndex = i * descriptorsPerPage;
+      const endIndex = startIndex + descriptorsPerPage;
+      const pageDescriptors = descriptors.slice(startIndex, endIndex);
+      const pageRows = [];
+      for (const descriptor of pageDescriptors) {
+        const row = templating.populateScreenTemplate(
+            rowTemplate,
+            {
+              descriptor,
+              negative_descriptor: `not ${descriptor}`,
+              positive_descriptor: descriptor,
+            },
+        );
+        pageRows.push(row);
+      }
+
+      const pageTemplate = templating.populateScreenTemplate(
+          populatedTemplate,
+          {
+            descriptor_rows: pageRows.join('\n'),
+          },
+      );
+      const labScreen = new lab.html.Form({
+        content: pageTemplate,
+        title: screenName,
+      });
+
+      let playListener;
+      let submitListener;
+      labScreen.on('run', () => {
+        playAudio();
+        playListener = document.addEventListener('keypress', (event) => {
+          if (event.key === 'r' && !playing) {
+            playAudio();
+          }
+        });
+      });
+
+      labScreen.on('end', () => {
+        document.removeEventListener('keypress', playListener);
+
+        const submitButton = document.getElementsByName('submit_button')[0];
+        submitButton.removeEventListener('click', submitListener);
+      });
+
+      pages.push(labScreen);
+    }
+
+    const labSequence = new lab.flow.Sequence({
+      content: pages,
+    });
+    return labSequence;
+  }
+
+  /**
    * A generic text screen with a continue button. Used for displaying
    * instructions or information.
    *
@@ -350,6 +447,7 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
 
   return {
     dissimilarityScreen,
+    semanticScreen,
     textScreen,
     textScreenNoContinue,
     headphoneCheck,

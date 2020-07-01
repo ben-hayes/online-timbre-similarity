@@ -23,6 +23,9 @@ define(['lab', 'sections'], function(lab, sections) {
     const experimentSpec = await experimentSpecReq.json();
     console.log(experimentSpec);
 
+    const semanticSection = await sections.semanticBlock(
+        experimentSpec.files,
+        experimentSpec.semanticDescriptors);
     const welcomeSection = await sections.welcomeScreens();
     const headphoneCheckSection = await sections.headphoneCheck();
     const auditionFiles = await sections.auditionFiles(experimentSpec.files);
@@ -37,6 +40,7 @@ define(['lab', 'sections'], function(lab, sections) {
 
     const experiment = new lab.flow.Sequence({
       content: [
+        semanticSection,
         welcomeSection,
         headphoneCheckSection,
         auditionFiles,

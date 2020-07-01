@@ -122,6 +122,47 @@ function makeTrials(files) {
 }
 
 /**
+ * Return the full list of semantic descriptors to be used in the study.
+ *
+ * @return {Array} A shuffled list of descriptor strings.
+ */
+function makeSemanticDescriptors() {
+  const descriptors = [
+    'bright',
+    'thick',
+    'rough',
+    'percussive',
+    'clean',
+    'complex',
+    'sweet',
+    'smooth',
+    'warm',
+    'raw',
+    'big',
+    'harsh',
+    'metallic',
+    'aggressive',
+    'rich',
+    'hard',
+    'deep',
+    'thin',
+    'noisy',
+    'plucky',
+    'woody',
+    'clear',
+    'gritty',
+    'dull',
+    'mellow',
+    'dark',
+    'sharp',
+    'heavy',
+    'muddy',
+    'ringing',
+  ];
+  return shuffleList(descriptors);
+}
+
+/**
  * Creates a complete experiment spec.
  *
  * @return {Object} The experiment spec.
@@ -133,6 +174,7 @@ function create() {
     practiceTrials: makePracticeTrials(),
     trials: makeTrials(files),
     files: shuffleList(files),
+    semanticDescriptors: makeSemanticDescriptors(),
   };
   return spec;
 }

@@ -210,6 +210,56 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
   }
 
   /**
+   * Creates a full sequence of semantic rating screens.
+   *
+   * @param {*} audioFiles A list of audio files
+   * @param {*} descriptors A list of descriptors
+   * @return {lab.flow.Sequence} The full dissimilarity block.
+   */
+  async function semanticBlock(audioFiles, descriptors) {
+    const sectionScreenTemplates = {
+      semantic_rating: 'semantic_rating',
+      semantic_explanation: 'text_screen',
+      semantic_complete: 'text_screen',
+      descriptor_row: 'descriptor_row',
+    };
+
+    const templates =
+        await templating.getSectionScreenTemplates(sectionScreenTemplates);
+
+    const explanationScreen =
+        screens.textScreen(templates.semantic_explanation);
+    const blockScreens = [explanationScreen];
+
+    const templateParameters = [];
+    for (const audioFile of audioFiles) {
+      templateParameters.push({audio_file: audioFile});
+    }
+
+    const descriptorsPerPage = 6;
+    const semanticRatings = new lab.flow.Loop({
+      template: screens.semanticScreen.bind(
+          undefined,
+          templates.semantic_rating,
+          templates.descriptor_row,
+          'semantic',
+          descriptors,
+          descriptorsPerPage),
+      templateParameters,
+    });
+    blockScreens.push(semanticRatings);
+
+    const completeScreen =
+        screens.textScreen(templates.semantic_complete);
+    blockScreens.push(completeScreen);
+
+    const block = new lab.flow.Sequence({
+      content: blockScreens,
+    });
+    return block;
+  }
+
+  /**
    * Creates the questionnaire sequence
    *
    * @return {lab.flow.Sequence} The questionnaire block
@@ -260,6 +310,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     dissimilarityInnerBlock,
     dissimilarityPracticeBlock,
     dissimilarityBlock,
+    semanticBlock,
     questionnaire,
     experimentComplete,
   };

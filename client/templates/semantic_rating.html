@@ -1,0 +1,19 @@
+<div style="width: 765px">
+<div>
+<p><%semantic_instructions%></p>
+</div>
+
+<audio src="audio/<%audio_src%>" style="display: none" name="audio" id="audio"></audio>
+
+<div>
+<form name="dissimilarity_form" name="dissimilarity_form" id="dissimilarity_form">
+    <table style="width: 100%">
+        <%descriptor_rows%>
+    </table>
+    <input type="hidden" name="audio_file" id="audio_file" value="<%audio_src%>">
+    <input type="hidden" name="stimulus_play_count" id="stimulus_play_count" value="0">
+    <input type="submit" name="submit_button" value="Submit" />
+</form>
+</div>
+
+</div>
