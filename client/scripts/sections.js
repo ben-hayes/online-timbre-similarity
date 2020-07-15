@@ -178,7 +178,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
    * @return {lab.flow.Sequence} The full dissimilarity block.
    */
   async function dissimilarityBlock(audioFilePairs, ratingsPerBlock) {
-    ratingsPerBlock = ratingsPerBlock || 100;
+    ratingsPerBlock = ratingsPerBlock || 70;
 
     const sectionScreenTemplates = {
       dissimilarity_rating: 'dissimilarity_rating',

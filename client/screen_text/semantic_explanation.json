@@ -1,7 +1,20 @@
 {
     "text_body": [
-        "<p>The practice section is now complete.</p>",
-        "<p>When you are ready, you may click <em>Continue</em> to begin ",
-        "the experiment.</p>"
+        "<h4>Part 2 Instructions</h4>",
+        "<p>In this section, your task is to listen to each sound and rate it ",
+        "on a number of descriptive scales. Each scale represents a single ",
+        "word and runs from the positive version on the left (e.g. <em>bright",
+        "</em>) to the negative version on the right (e.g. <em>not bright</em>",
+        ").</p>",
+        "<p>You should make use of the full range of the slider to describe ",
+        "the characteristics of a sound. For example, if you think a sound is ",
+        "particularly <em>sharp</em> sounding, you should place the slider ",
+        "for <em>sharp</em> near the left side. Conversely, if you think it ",
+        "is not particularly <em>sharp</em> you should use the right hand ",
+        "side of the scale, and if you think it is only moderately ",
+        "<em>sharp</em> you should use the middle region of the scale.</p>",
+        "<p>You may listen to each sound as many times as you want using the ",
+        "<em>R</em> key on your keyboard.</p>",
+        "<p>Please click the button below when you are ready to begin.</p>"
     ]
 }

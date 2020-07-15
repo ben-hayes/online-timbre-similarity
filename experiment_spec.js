@@ -24,23 +24,7 @@ function makeSpecHash() {
 function makePracticeTrials() {
   const practiceTrials = [
     {
-      audio_src_a: 'Piano_A3_MDS.wav',
-      audio_src_b: 'Wurlitzer_A3_MDS.wav',
-    },
-    {
-      audio_src_a: 'Contrabass_A1_MDS.wav',
-      audio_src_b: 'Oboe_A4_MDS.wav',
-    },
-    {
-      audio_src_a: 'Sitar_A3_MDS.wav',
-      audio_src_b: 'Sitar_A3_MDS.wav',
-    },
-    {
-      audio_src_a: 'Marimba_A3_MDS.wav',
-      audio_src_b: 'Sax_A2_MDS.wav',
-    },
-    {
-      audio_src_a: 'Violin_A3_MDS.wav',
+      audio_src_a: 'Acid_A2_MDS.wav',
       audio_src_b: 'Cello_A3_MDS.wav',
     },
   ];
