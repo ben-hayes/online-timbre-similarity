@@ -217,7 +217,7 @@ Contact Ray Gonzalez raygon@mit.edu or Kevin J. P. Woods kwoods@mit.edu
           renderResponseWarnings();
         }
       }
-    }).appendTo($('#hc-container'));
+    }).css('display', 'block').css('margin', 'auto').appendTo($('#hc-container'));
   };
 
   /**
@@ -294,7 +294,7 @@ Contact Ray Gonzalez raygon@mit.edu or Kevin J. P. Woods kwoods@mit.edu
         teardownHTMLPage();
         $(document).trigger('hcCalibrationEnd', {'data': headphoneCheckData, 'config': headphoneCheckConfig});
       }
-    }).appendTo($('#hc-container'));
+    }).css('display', 'block').css('margin', 'auto').appendTo($('#hc-container'));
   };
 
   /*** PRIVATE FUNCTIONS ***/
@@ -328,7 +328,7 @@ Contact Ray Gonzalez raygon@mit.edu or Kevin J. P. Woods kwoods@mit.edu
 
     var trialBackgroundColor = $('#'+divID).css('background-color');
     $('<div/>', {id: 'hc-play-button-border-' + stimID,})
-    .css({'border': '3px solid ' + trialBackgroundColor, 'display': 'inline-block'})
+    .css({'border': '3px solid ' + trialBackgroundColor})
     .append(
       $('<button/>', {
         id: 'hc-play-button-' + stimID,
@@ -337,7 +337,7 @@ Contact Ray Gonzalez raygon@mit.edu or Kevin J. P. Woods kwoods@mit.edu
         click: function () {
           if (!st_isPlaying) playStim(stimID);
         },
-      }))
+      }).css('display', 'block').css('margin', 'auto'))
     .appendTo($('#' + divID));
 
     //add in the radio buttons for selecting which sound was softest

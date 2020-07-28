@@ -7,6 +7,7 @@ const consentPdf = require('./consent_pdf');
 const QUESTIONNAIRE_COLLECTION = 'questionnaire_responses';
 const PRACTICE_COLLECTION = 'practice_dissimilarity_responses';
 const DISSIMILARITY_COLLECTION = 'dissimilarity_responses';
+const SEMANTIC_COLLECTION = 'semantic_responses';
 const EXPERIMENT_SPEC_COLLECTION = 'experiment_specs';
 
 const app = express();
@@ -80,6 +81,7 @@ app.get('/data/questionnaire_responses.csv', function(req, res) {
     'hearing_issue',
     'instrument_years',
     'primary_instrument',
+    'musical_identity',
     'duration',
   ];
   let csvString = cols.join(',') + '\n';
@@ -122,6 +124,8 @@ app.post('/api/store-experiment-data', function(req, res) {
   const questionnaireResponses = [];
   const practiceResponses = [];
   const dissimilarityResponses = [];
+  const semanticResponses = [];
+  let languageScreeningResponse = false;
 
   for (const entry of req.body.data) {
     entry.specId = specId;
@@ -131,6 +135,10 @@ app.post('/api/store-experiment-data', function(req, res) {
       questionnaireResponses.push(entry);
     } else if (entry.sender === 'practice_dissimilarity') {
       practiceResponses.push(entry);
+    } else if (entry.sender === 'language_screening') {
+      languageScreeningResponse = entry.native_english === 'yes';
+    } else if (entry.sender === 'semantic') {
+      semanticResponses.push(entry);
     }
   }
 
@@ -146,6 +154,10 @@ app.post('/api/store-experiment-data', function(req, res) {
   if (questionnaireResponses.length > 0) {
     dbOperations.push(db.collection(QUESTIONNAIRE_COLLECTION)
         .insertMany(questionnaireResponses));
+  }
+  if (semanticResponses.length > 0 && languageScreeningResponse === true) {
+    dbOperations.push(db.collection(SEMANTIC_COLLECTION)
+        .insertMany(semanticResponses));
   }
 
   Promise.all(dbOperations)

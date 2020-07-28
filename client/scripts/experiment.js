@@ -35,18 +35,80 @@ define(['lab', 'sections'], function(lab, sections) {
     const dissimilaritySection = await sections.dissimilarityBlock(
         experimentSpec.trials,
         100);
-    const questionnaireSection = await sections.questionnaire();
+
+    const englishSpeakingBlock = new lab.flow.Sequence({
+      content: [
+        auditionFiles.nativeEnglishSpeakers,
+        dissimilarityPracticeSection,
+        dissimilaritySection,
+        semanticSection,
+      ],
+    });
+    const nonEnglishSpeakingBlock = new lab.flow.Sequence({
+      content: [
+        auditionFiles.nonNativeEnglishSpeakers,
+        dissimilarityPracticeSection,
+        dissimilaritySection,
+      ],
+    });
+
+    englishSpeakingBlock.on('run', () => {
+      const progressBar = document.getElementById('exp-progress');
+      progressBar.style.display = 'inline-block';
+      const mutationObserver = new MutationObserver((mutations, obs) => {
+        const numSemantic = experimentSpec.files.length *
+            experimentSpec.semanticDescriptors.length;
+        const numDissim = experimentSpec.trials.length;
+        const progress = auditionFiles.nativeEnglishSpeakers.progress * 0.05 +
+            dissimilarityPracticeSection.progress * 0.05 +
+            (dissimilaritySection.options.content[1].progress *
+                0.9 * numDissim / (numDissim + numSemantic)) +
+            (semanticSection.options.content[1].progress * 0.9 *
+                numSemantic / (numDissim + numSemantic));
+
+        progressBar.value = progress;
+      });
+      const target = document.getElementById('main-portal');
+      const config = {attributes: true, childList: true, subtree: true};
+      mutationObserver.observe(target, config);
+    });
+    nonEnglishSpeakingBlock.on('run', () => {
+      const progressBar = document.getElementById('exp-progress');
+      progressBar.style.display = 'inline-block';
+      const mutationObserver = new MutationObserver((mutations, obs) => {
+        const progress = auditionFiles.nativeEnglishSpeakers.progress * 0.05 +
+            dissimilarityPracticeSection.progress * 0.05 +
+            dissimilaritySection.options.content[1].progress * 0.9;
+
+        progressBar.value = progress;
+      });
+      const target = document.getElementById('main-portal');
+      const config = {attributes: true, childList: true, subtree: true};
+      mutationObserver.observe(target, config);
+    });
+
+    const langaugeScreeningCallback = (isNativeEnglishSpeaker) => {
+      if (!isNativeEnglishSpeaker) {
+        englishSpeakingBlock.on('run', () => {
+          englishSpeakingBlock.end();
+        });
+      } else {
+        nonEnglishSpeakingBlock.on('run', () => {
+          nonEnglishSpeakingBlock.end();
+        });
+      }
+    };
+    const questionnaireSection =
+        await sections.questionnaire(langaugeScreeningCallback);
     const experimentCompleteSection = await sections.experimentComplete();
 
     const experiment = new lab.flow.Sequence({
       content: [
-        semanticSection,
         welcomeSection,
         headphoneCheckSection,
-        auditionFiles,
-        dissimilarityPracticeSection,
-        dissimilaritySection,
         questionnaireSection,
+        englishSpeakingBlock,
+        nonEnglishSpeakingBlock,
       ],
     });
     const fullSequence = new lab.flow.Sequence({

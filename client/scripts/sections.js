@@ -79,12 +79,15 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
   async function auditionFiles(audioFiles) {
     const sectionScreenTemplates = {
       audition_explanation: 'text_screen',
+      audition_explanation_non_native: 'text_screen',
       audition_files: 'audition_files',
     };
     const templates =
         await templating.getSectionScreenTemplates(sectionScreenTemplates);
     const auditionExplanation =
         screens.textScreen(templates.audition_explanation);
+    const auditionExplanationNonNative =
+        screens.textScreen(templates.audition_explanation_non_native);
     const auditionScreen = screens.auditionFiles(
         templates.audition_files,
         audioFiles);
@@ -92,7 +95,13 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     const block = new lab.flow.Sequence({
       content: [auditionExplanation, auditionScreen],
     });
-    return block;
+    const blockNonNative = new lab.flow.Sequence({
+      content: [auditionExplanationNonNative, auditionScreen],
+    });
+    return {
+      nativeEnglishSpeakers: block,
+      nonNativeEnglishSpeakers: blockNonNative,
+    };
   }
 
   /**
@@ -226,6 +235,23 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
   }
 
   /**
+   * Performs the Fisher-Yates shuffling algorithm on a list.
+   *
+   * @param {*} list The list to be shuffled.
+   * @return {list} The shuffled list.
+   */
+  function shuffleList(list) {
+    const outList = Array.from(list);
+    for (let i = 0; i < list.length; i++) {
+      swapIndex = Math.floor(Math.random() * list.length);
+      const swapValue = outList[i];
+      outList[i] = outList[swapIndex];
+      outList[swapIndex] = swapValue;
+    }
+    return outList;
+  }
+
+  /**
    * Creates a full sequence of semantic rating screens.
    *
    * @param {*} audioFiles A list of audio files
@@ -248,25 +274,26 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     const blockScreens = [explanationScreen];
 
     const templateParameters = [];
-    let index = 0;
-    for (const audioFile of audioFiles) {
-      templateParameters.push({
-        audio_file: audioFile,
-        trial_number: index,
-        total_trials: audioFiles.length,
-      });
-      index += 1;
+    let index = 1;
+    for (const descriptor of descriptors) {
+      const shuffledFiles = shuffleList(audioFiles);
+      for (const audioFile of shuffledFiles) {
+        templateParameters.push({
+          audio_file: audioFile,
+          descriptor,
+          trial_number: index,
+          total_trials: audioFiles.length * descriptors.length,
+        });
+        index += 1;
+      }
     }
 
-    const descriptorsPerPage = 8;
     const semanticRatings = new lab.flow.Loop({
       template: screens.semanticScreen.bind(
           undefined,
           templates.semantic_rating,
           templates.descriptor_row,
-          'semantic',
-          descriptors,
-          descriptorsPerPage),
+          'semantic'),
       templateParameters,
     });
     blockScreens.push(semanticRatings);
@@ -282,11 +309,70 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
   }
 
   /**
+   * Returns a boolean signifying whether the country in the given string is
+   * primarily English speaking.
+   *
+   * @param {string} country The country name to test
+   * @return {bool} True if the country is English speaking
+   */
+  function isEnglishSpeakingCountry(country) {
+    const englishSpeakingCountries = [
+      'Australia',
+      'New Zealand',
+      'United Kingdom',
+      'United States',
+      'United States Minor Outlying Islands',
+      'Antigua and Barbuda',
+      'Bahamas',
+      'Ghana',
+      'Nigeria',
+      'Fiji',
+      'Singapore',
+      'Ireland',
+      'Isle of Man',
+      'Kenya',
+      'Canada',
+      'Grenada',
+      'Philippines',
+      'South Africa',
+      'Belize',
+      'Cook Islands',
+      'Dominica',
+      'Guyana',
+      'Jamaica',
+      'Liberia',
+      'Papua New Guinea',
+      'Saint Kitts and Nevis',
+      'Saint Lucia',
+      'Saint Vincent and The Grenadines',
+      'Sierra Leone',
+      'American Samoa',
+      'Anguilla',
+      'Bermuda',
+      'British Virgin Islands',
+      'Cayman Islands',
+      'Falkland Islands',
+      'Gibraltar',
+      'Guam',
+      'Jersey',
+      'Norfolk Island',
+      'Pitcairn Islands',
+      'Sint Maarten',
+      'Turks and Caicos Islands',
+      'Virgin Islands, British',
+      'Virgin Islands, U.S.',
+    ];
+    return englishSpeakingCountries.includes(country);
+  }
+
+  /**
    * Creates the questionnaire sequence
    *
+   * @param {function} callback A callback reporting whether language screening
+   *  was successful.
    * @return {lab.flow.Sequence} The questionnaire block
    */
-  async function questionnaire() {
+  async function questionnaire(callback) {
     const sectionScreenTemplates = {
       questionnaire: 'questionnaire',
       questionnaire_explanation: 'text_screen',
@@ -297,6 +383,20 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     const questionnaireScreen = screens.questionnaire(templates.questionnaire);
     const questionnaireExplanation =
         screens.textScreen(templates.questionnaire_explanation);
+
+    let submitListener;
+    questionnaireScreen.on('run', () => {
+      const submitButton = document.getElementById('submit');
+      submitListener = submitButton.addEventListener('click', () => {
+        const formativeCountry =
+          document.getElementById('country_childhood').value;
+        callback(isEnglishSpeakingCountry(formativeCountry));
+      });
+    });
+    questionnaireScreen.on('end', () => {
+      const submitButton = document.getElementById('submit');
+      submitButton.removeEventListener('click', submitListener);
+    });
     const block = new lab.flow.Sequence({
       content: [questionnaireExplanation, questionnaireScreen],
     });

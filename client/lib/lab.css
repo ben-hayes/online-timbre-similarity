@@ -145,6 +145,21 @@ header, footer, main {
   display: block;
   text-align: center;
 }
+.content-text {
+  text-align: justify;
+  text-justify: inter-word;
+  width: 800px;
+  margin: auto;
+}
+.questionnaire-text {
+  text-align: left;
+}
+#hc-calibration-instruction {
+  text-align: justify;
+  text-justify: inter-word;
+  width: 800px;
+  margin: auto;
+}
 h1, h2, h3 {
   line-height: 1.4em;
   line-height: var(--line-height);
@@ -368,7 +383,10 @@ input[type=range]::-webkit-slider-runnable-track {
   height: 8.4px;
   cursor: pointer;
 }
-input[type=range]::-webkit-slider-thumb {
+.not-clicked::-webkit-slider-thumb {
+  display: none;
+}
+input[type=range].clicked::-webkit-slider-thumb {
   margin-top: -14px;
   width: 16px;
   height: 36px;
@@ -431,6 +449,27 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: #85acd5;
+}
+* {
+  box-sizing: border-box;
+}
+.left-footer-box, .right-footer-box {
+  float: left;
+  width: 25%;
+  padding: 1px;
+}
+.center-footer-box {
+  float: left;
+  width: 50%;
+  padding: 1px;
+}
+.clearfix {
+  width: 100%;
+}
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 /*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
 how to remove the virtical space around the range input in IE*/

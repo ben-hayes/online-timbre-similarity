@@ -4,5 +4,8 @@
     "gender_label": "Gender:",
     "instrument_years_label": "Years practicing or playing primary instrument:",
     "primary_instrument_label": "Primary instrument:",
-    "hearing_issue_label": "Do you have any hearing issues?"
+    "sim_label": "Which title best describes you?",
+    "synth_label": "What is your experience level with synthesis?",
+    "hearing_issue_label": "Do you have any hearing issues?",
+    "formative_country_label": "In which country did you spend the majority of your childhood?"
 }

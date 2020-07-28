@@ -1,0 +1,23 @@
+<div>
+    <span><%language_screening_text%></span>
+    <div>
+        <form id="language_screening_form">
+            <table style="width: 60%; margin: 0 auto">
+                <tr>
+                    <td style="width: 80%"><%language_screening_question%></td>
+                    <td>
+                        <label>
+                            <input type="radio" name="native_english" id="native_english_yes" value="yes" required>
+                            Yes
+                        </label><br />
+                        <label>
+                            <input type="radio" name="native_english" id="native_english_no" value="no" required>
+                            No
+                        </label><br />
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" id="submit" name="submit" value="Submit">
+        </form>
+    </div>
+</div>

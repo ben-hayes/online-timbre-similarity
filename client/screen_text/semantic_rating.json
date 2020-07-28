@@ -1,3 +1,9 @@
 {
-    "semantic_instructions": "Please listen carefully to the sound and rate it on the following scales.<br/><em>Press R to listen to the sound again.</em>"
+    "semantic_instructions": [
+        "<p>Please listen carefully to the sound and rate it on the following ",
+        "scale.</p>",
+        "<p><em>Use the mouse or the arrow keys to move along the scale.</em><br />",
+        "<em>Press R to listen to the sound again.</em><br />",
+        "<em>Press Enter to submit your response</em></p>"
+    ]
 }

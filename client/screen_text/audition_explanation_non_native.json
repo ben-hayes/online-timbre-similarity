@@ -1,16 +1,13 @@
 {
     "text_body": [
-        "<p>Thank you for you interest in our listening test. ",
-        "The experiment has two sections. </p>",
-        "<p>The first is a classic pairwise ",
+        "<p>Thank you for you interest in our listening test.</p>",
+        "<p>This is a classic pairwise ",
         " dissimilarity experiment for investigation of timbre perception. ",
         "Your task will be to rate the perceived distances between all ",
         "possible pairs of sounds (same pairs included) within a stimulus ",
         "set of 20 tones. This equates to 210 comparisons overall. Because ",
         "of the number of tasks, the system will prompt you to take a ",
         "small break every 70 comparisons in order to help maintain ",
-        "your concentration.</p>",
-        "<p>In the second section, you will be asked to rate each individual ",
-        "sound in the set on a number of descriptive scales.</p>"
+        "your concentration.</p>"
     ]
 }

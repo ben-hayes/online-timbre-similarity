@@ -24,8 +24,24 @@ function makeSpecHash() {
 function makePracticeTrials() {
   const practiceTrials = [
     {
-      audio_src_a: 'Acid_A2_MDS.wav',
-      audio_src_b: 'Cello_A3_MDS.wav',
+      audio_src_a: 'a16c605065ef285b583f9817bd97f293.wav',
+      audio_src_b: 'bd4b1813b6c4dea5547f13c149d15d64.wav',
+    },
+    {
+      audio_src_a: 'e810c2ed92a870c2330b89201c8903fc.wav',
+      audio_src_b: 'bf07b0ee721e330637444e9d5bc50dd9.wav',
+    },
+    {
+      audio_src_a: 'ddf9e6bb436a51af3c1a89e7e3bbc881.wav',
+      audio_src_b: 'ddf9e6bb436a51af3c1a89e7e3bbc881.wav',
+    },
+    {
+      audio_src_a: '0b8f117c39291bbb497e9d8b2b1119a3.wav',
+      audio_src_b: '4f9435bb68841c60f8c4b19412aa7d96.wav',
+    },
+    {
+      audio_src_a: '08c52c851dc787e56229cb5e69dbca32.wav',
+      audio_src_b: '32a71c14657ef1bbaad461e6b57a3dfa.wav',
     },
   ];
   return practiceTrials;

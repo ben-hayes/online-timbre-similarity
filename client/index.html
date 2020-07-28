@@ -15,7 +15,7 @@
     <main
       class="content-vertical-center content-horizontal-center"
       data-labjs-section="main"
-      style="margin: 0 10%"
+      id="main-portal"
     >
       <div>
         <img src="lib/loading.svg" alt="loading icon" style="padding: 1rem"><br>
@@ -26,9 +26,16 @@
       </div>
     </main>
     <footer class="content-vertical-center content-horizontal-center">
-      <div style="display: block; overflow: hidden; width: 100%">
-        <small class="text-muted"></small>
-        <button id="stop-button" style="float: right">Stop Experiment</button>
+      <div class="clearfix">
+        <div class="left-footer-box">
+        </div>
+        <div class="center-footer-box">
+          <progress style="width: 100%; display: none" id="exp-progress" value="0.0" max="1.0">Experiment Progress</progress>
+        </div>
+        <div class="right-footer-box">
+          <small class="text-muted"></small>
+          <button id="stop-button" style="float: right">Stop Experiment</button>
+        </div>
       </div>
     </footer>
   </div>

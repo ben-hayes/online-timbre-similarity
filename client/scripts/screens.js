@@ -172,10 +172,8 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
    * @param {*} template The populated HTML template for the screen
    * @param {*} rowTemplate The HTML template for each descriptor row
    * @param {*} screenName The name to be recorded in the datastore
-   * @param {*} descriptors The list of semantic descriptors
-   * @param {*} descriptorsPerPage The number of descriptors to display per
-   *  rating screen
-   * @param {*} audioFile Object containing the audio file for the trial
+   * @param {*} spec An object containing the audio file, descriptor, current
+   *  trial index, and total number of trials.
    * @return {lab.core.Component} The populated lab.js component with all
    *  behaviour. This is either a lab.flow.Sequence.
    */
@@ -183,13 +181,11 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
       template,
       rowTemplate,
       screenName,
-      descriptors,
-      descriptorsPerPage,
-      audioFile) {
+      spec) {
     const populatedTemplate = templating.populateScreenTemplate(
         template,
         {
-          audio_src: audioFile.audio_file,
+          audio_src: spec.audio_file,
         });
 
     let playing = false;
@@ -207,63 +203,85 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
       player.play();
     };
 
-    const numPages = Math.ceil(descriptors.length / descriptorsPerPage);
-    const pages = [];
-    for (let i = 0; i < numPages; i++) {
-      const startIndex = i * descriptorsPerPage;
-      const endIndex = startIndex + descriptorsPerPage;
-      const pageDescriptors = descriptors.slice(startIndex, endIndex);
-      const pageRows = [];
-      for (const descriptor of pageDescriptors) {
-        const row = templating.populateScreenTemplate(
-            rowTemplate,
-            {
-              descriptor,
-              negative_descriptor: `not ${descriptor}`,
-              positive_descriptor: descriptor,
-            },
-        );
-        pageRows.push(row);
-      }
-
-      const pageTemplate = templating.populateScreenTemplate(
-          populatedTemplate,
-          {
-            descriptor_rows: pageRows.join('\n'),
-            trial_number: audioFile.trial_number * numPages + i + 1,
-            total_trials: audioFile.total_trials * numPages,
-          },
-      );
-      const labScreen = new lab.html.Form({
-        content: pageTemplate,
-        title: screenName,
-      });
-
-      let playListener;
-      let submitListener;
-      labScreen.on('run', () => {
-        playAudio();
-        playListener = document.addEventListener('keypress', (event) => {
-          if (event.key === 'r' && !playing) {
-            playAudio();
-          }
-        });
-      });
-
-      labScreen.on('end', () => {
-        document.removeEventListener('keypress', playListener);
-
-        const submitButton = document.getElementsByName('submit_button')[0];
-        submitButton.removeEventListener('click', submitListener);
-      });
-
-      pages.push(labScreen);
-    }
-
-    const labSequence = new lab.flow.Sequence({
-      content: pages,
+    const row = templating.populateScreenTemplate(
+        rowTemplate,
+        {
+          descriptor: spec.descriptor,
+          negative_descriptor: `not ${spec.descriptor}`,
+          positive_descriptor: spec.descriptor,
+        },
+    );
+    const pageTemplate = templating.populateScreenTemplate(
+        populatedTemplate,
+        {
+          descriptor_rows: row,
+          trial_number: spec.trial_number,
+          total_trials: spec.total_trials,
+        },
+    );
+    const labScreen = new lab.html.Form({
+      content: pageTemplate,
+      title: screenName,
     });
-    return labSequence;
+
+    let playListener;
+    let submitListener;
+    labScreen.on('run', () => {
+      playAudio();
+      playListener = document.addEventListener('keypress', (event) => {
+        if (event.key === 'r' && !playing) {
+          playAudio();
+        }
+      });
+      const removeNotClicked = function(e) {
+        if (e.key !== 'ArrowRight' &&
+            e.key !== 'ArrowLeft' &&
+            e.type !== 'mousedown') {
+          return;
+        }
+
+        if (e.type === 'mousedown') {
+          $(this).val((e.offsetX - 8) / $(this).width());
+        }
+
+        $(this).removeClass('not-clicked');
+        $(this).addClass('clicked');
+        $(this).off('keydown');
+        $(this).off('mousedown');
+      };
+      $('.not-clicked').mousedown(removeNotClicked);
+      $('.not-clicked').keydown(removeNotClicked);
+      $('.not-clicked').blur(function(e) {
+        $(this).focus();
+      });
+
+      const submitButton = document.getElementById('submit_button');
+      let hasDelayed = false;
+      submitListener = submitButton.addEventListener('click', () => {
+        const descriptorSlider = document.getElementById('semantic_rating');
+        if (!hasDelayed) {
+          if (descriptorSlider.className === 'not-clicked') {
+            descriptorSlider.style.borderColor = '#ff0000';
+          } else {
+            descriptorSlider.style.borderColor = '#00ff00';
+            setTimeout(() => {
+              hasDelayed = true;
+              submitButton.click();
+            }, 300);
+          }
+          event.preventDefault();
+        }
+      });
+    });
+
+    labScreen.on('end', () => {
+      document.removeEventListener('keypress', playListener);
+
+      const submitButton = document.getElementsByName('submit_button')[0];
+      submitButton.removeEventListener('click', submitListener);
+    });
+
+    return labScreen;
   }
 
   /**
