@@ -1,10 +1,10 @@
 {
     "text_body": [
         "<p>Thank you for your participation.</p>",
-        "<p>You are now able to enter our prize draw for a £25 Amazon gift ",
-        "card. Please <a href='https://forms.gle/xCRfwFRAFdcCWYqs8'>click ",
-        "here</a> to take part.",
-        "<p>The experiment is now complete. You may now safely close your ",
-        "browser window.</p>"
+        "<p>You are now able to enter our prize draw for one of two 25 Amazon gift ",
+        "cards. Please <a href='https://forms.gle/xCRfwFRAFdcCWYqs8' ",
+        "target=\"_blank\">click here</a> to take part.",
+        "<p id=\"uploading-complete\">Your responses are being uploaded. ",
+        "Please wait before closing your browser window.</p>"
     ]
 }

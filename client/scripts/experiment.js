@@ -124,6 +124,21 @@ define(['lab', 'sections'], function(lab, sections) {
               specId: experimentSpec.specId,
             },
         ).then((res) => {
+          const uploadMessage = document.getElementById('uploading-complete');
+          if (res.status === 201 && res.ok === true) {
+            uploadMessage.innerHTML = 'The experiment is complete. It is now ' +
+                'safe to close your browser window.';
+          } else {
+            window.downloadExperimentData = () => {
+              experiment.options.datastore.download();
+            };
+            uploadMessage.innerHTML = 'There was a problem uploading your ' +
+                'responses. Please <a href=\"javascript:void(0)\" onclick=' +
+                '\"downloadExperimentData();\">click here' +
+                '</a> to download your responses as a file and send them via ' +
+                'email to <a href=\"mailto:b.j.hayes@se19.qmul.ac.uk\">' +
+                'b.j.hayes@se19.qmul.ac.uk</a>.';
+          }
           console.log(res);
         });
       }
