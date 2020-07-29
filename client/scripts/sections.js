@@ -187,7 +187,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
    * @return {lab.flow.Sequence} The full dissimilarity block.
    */
   async function dissimilarityBlock(audioFilePairs, ratingsPerBlock) {
-    ratingsPerBlock = ratingsPerBlock || 70;
+    ratingsPerBlock = ratingsPerBlock || 100;
 
     const sectionScreenTemplates = {
       dissimilarity_rating: 'dissimilarity_rating',
@@ -256,14 +256,18 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
    *
    * @param {*} audioFiles A list of audio files
    * @param {*} descriptors A list of descriptors
+   * @param {*} ratingsPerBlock The number of ratings between each break
    * @return {lab.flow.Sequence} The full dissimilarity block.
    */
-  async function semanticBlock(audioFiles, descriptors) {
+  async function semanticBlock(audioFiles, descriptors, ratingsPerBlock) {
+    ratingsPerBlock = ratingsPerBlock || 100;
+
     const sectionScreenTemplates = {
       semantic_rating: 'semantic_rating',
       semantic_explanation: 'text_screen',
       semantic_complete: 'text_screen',
       descriptor_row: 'descriptor_row',
+      dissimilarity_break: 'text_screen',
     };
 
     const templates =
@@ -287,16 +291,29 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
         index += 1;
       }
     }
+    const numberOfInnerBlocks =
+        Math.ceil(templateParameters.length / ratingsPerBlock);
 
-    const semanticRatings = new lab.flow.Loop({
-      template: screens.semanticScreen.bind(
-          undefined,
-          templates.semantic_rating,
-          templates.descriptor_row,
-          'semantic'),
-      templateParameters,
-    });
-    blockScreens.push(semanticRatings);
+    for (let i = 0; i < numberOfInnerBlocks; i++) {
+      const innerBlockTrials = templateParameters.slice(
+          i * ratingsPerBlock,
+          (i + 1) * ratingsPerBlock);
+      const semanticRatings = new lab.flow.Loop({
+        template: screens.semanticScreen.bind(
+            undefined,
+            templates.semantic_rating,
+            templates.descriptor_row,
+            'semantic'),
+        templateParameters: innerBlockTrials,
+      });
+      blockScreens.push(semanticRatings);
+
+      if (i < numberOfInnerBlocks - 1) {
+        const breakScreen =
+            screens.textScreen(templates.dissimilarity_break);
+        blockScreens.push(breakScreen);
+      }
+    }
 
     const completeScreen =
         screens.textScreen(templates.semantic_complete);

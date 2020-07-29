@@ -65,7 +65,7 @@ define(['lab', 'templating', 'HeadphoneCheck'], function(
         playerTimeout = setTimeout(() => {
           playerB.play();
         },
-        500);
+        100);
       };
       playerB.onended = () => {
         playing = false;
