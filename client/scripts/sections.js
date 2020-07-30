@@ -101,6 +101,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     return {
       nativeEnglishSpeakers: block,
       nonNativeEnglishSpeakers: blockNonNative,
+      noExplanation: auditionScreen,
     };
   }
 

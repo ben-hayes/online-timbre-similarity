@@ -41,6 +41,7 @@ define(['lab', 'sections'], function(lab, sections) {
         auditionFiles.nativeEnglishSpeakers,
         dissimilarityPracticeSection,
         dissimilaritySection,
+        auditionFiles.noExplanation,
         semanticSection,
       ],
     });
