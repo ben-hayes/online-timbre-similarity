@@ -107,8 +107,8 @@ define(['lab', 'sections'], function(lab, sections) {
 
     const experiment = new lab.flow.Sequence({
       content: [
-        // welcomeSection,
-        // headphoneCheckSection,
+        welcomeSection,
+        headphoneCheckSection,
         questionnaireSection,
         englishSpeakingBlock,
         nonEnglishSpeakingBlock,
