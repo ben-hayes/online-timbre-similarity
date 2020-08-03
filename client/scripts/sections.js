@@ -409,8 +409,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
         const formativeCountry =
             document.getElementById('country_childhood').value;
         const isNativeSpeaker =
-            document.getElementById('native_english').value === 'yes';
-        console.log(isNativeSpeaker);
+            document.getElementById('native_english_yes').checked;
         callback(isEnglishSpeakingCountry(formativeCountry) || isNativeSpeaker);
       });
     });
