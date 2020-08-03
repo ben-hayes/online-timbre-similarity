@@ -101,6 +101,7 @@ define(['lab', 'sections'], function(lab, sections) {
     };
     const questionnaireSection =
         await sections.questionnaire(langaugeScreeningCallback);
+    const feedbackSection = await sections.feedbackForm();
     const experimentCompleteSection = await sections.experimentComplete();
 
     const experiment = new lab.flow.Sequence({
@@ -110,6 +111,7 @@ define(['lab', 'sections'], function(lab, sections) {
         questionnaireSection,
         englishSpeakingBlock,
         nonEnglishSpeakingBlock,
+        feedbackSection,
       ],
     });
     const fullSequence = new lab.flow.Sequence({

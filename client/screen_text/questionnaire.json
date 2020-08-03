@@ -7,5 +7,6 @@
     "sim_label": "Which title best describes you?",
     "synth_label": "What is your experience level with synthesis?",
     "hearing_issue_label": "Do you have any hearing issues?",
-    "formative_country_label": "In which country did you spend the majority of your childhood?"
+    "formative_country_label": "In which country did you spend the majority of your childhood?",
+    "native_english_label": "Are you a native English speaker?"
 }

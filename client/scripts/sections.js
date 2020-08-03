@@ -407,8 +407,11 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
       const submitButton = document.getElementById('submit');
       submitListener = submitButton.addEventListener('click', () => {
         const formativeCountry =
-          document.getElementById('country_childhood').value;
-        callback(isEnglishSpeakingCountry(formativeCountry));
+            document.getElementById('country_childhood').value;
+        const isNativeSpeaker =
+            document.getElementById('native_english').value === 'yes';
+        console.log(isNativeSpeaker);
+        callback(isEnglishSpeakingCountry(formativeCountry) || isNativeSpeaker);
       });
     });
     questionnaireScreen.on('end', () => {
@@ -419,6 +422,24 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
       content: [questionnaireExplanation, questionnaireScreen],
     });
     return block;
+  }
+
+  /**
+   * Creates a feedback form
+   *
+   * @return {lab.html.Form} The feedback form
+   */
+  async function feedbackForm() {
+    const sectionScreenTemplates = {
+      feedback_form: 'feedback_form',
+    };
+    const templates =
+        await templating.getSectionScreenTemplates(sectionScreenTemplates);
+    const feedbackFormScreen = new lab.html.Form({
+      content: templates.feedback_form,
+      title: 'feedback',
+    });
+    return feedbackFormScreen;
   }
 
   /**
@@ -452,6 +473,7 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     dissimilarityBlock,
     semanticBlock,
     questionnaire,
+    feedbackForm,
     experimentComplete,
   };
 });

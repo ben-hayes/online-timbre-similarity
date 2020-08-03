@@ -9,6 +9,7 @@ const PRACTICE_COLLECTION = 'practice_dissimilarity_responses';
 const DISSIMILARITY_COLLECTION = 'dissimilarity_responses';
 const SEMANTIC_COLLECTION = 'semantic_responses';
 const EXPERIMENT_SPEC_COLLECTION = 'experiment_specs';
+const FEEDBACK_COLLECTION = 'experiment_feedback';
 
 const app = express();
 app.use(bodyParser.json({
@@ -125,6 +126,7 @@ app.post('/api/store-experiment-data', function(req, res) {
   const practiceResponses = [];
   const dissimilarityResponses = [];
   const semanticResponses = [];
+  const feedbackResponses = [];
   let languageScreeningResponse = false;
 
   for (const entry of req.body.data) {
@@ -139,6 +141,8 @@ app.post('/api/store-experiment-data', function(req, res) {
       languageScreeningResponse = entry.native_english === 'yes';
     } else if (entry.sender === 'semantic') {
       semanticResponses.push(entry);
+    } else if (entry.sender === 'feedback') {
+      feedbackResponses.push(feedback);
     }
   }
 
@@ -158,6 +162,10 @@ app.post('/api/store-experiment-data', function(req, res) {
   if (semanticResponses.length > 0 && languageScreeningResponse === true) {
     dbOperations.push(db.collection(SEMANTIC_COLLECTION)
         .insertMany(semanticResponses));
+  }
+  if (feedbackResponses.length > 0) {
+    dbOperations.push(db.collection(FEEDBACK_COLLECTION)
+        .insertMany(feedbackResponses));
   }
 
   Promise.all(dbOperations)
