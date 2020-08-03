@@ -1,18 +1,21 @@
 requirejs(
     ['./experiment'],
     function(experiment) {
-      experiment.get().then(({fullSequence, experiment}) => {
+      experiment.get().then(({
+        fullSequenceWithStopScreen,
+        fullSequence,
+        experiment}) => {
         const stopButton = document.getElementById('stop-button');
         stopButton.addEventListener('click', (event) => {
           const cancel =
               confirm('Are you sure you want to stop the experiment?');
           if (cancel) {
             experiment.cancelled = true;
-            experiment.end();
+            fullSequence.end();
           }
 
           stopButton.blur();
         });
-        fullSequence.run();
+        fullSequenceWithStopScreen.run();
       });
     });

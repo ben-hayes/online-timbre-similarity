@@ -103,6 +103,7 @@ define(['lab', 'sections'], function(lab, sections) {
         await sections.questionnaire(langaugeScreeningCallback);
     const feedbackSection = await sections.feedbackForm();
     const experimentCompleteSection = await sections.experimentComplete();
+    const stopScreen = await sections.stopSection();
 
     const experiment = new lab.flow.Sequence({
       content: [
@@ -116,6 +117,9 @@ define(['lab', 'sections'], function(lab, sections) {
     });
     const fullSequence = new lab.flow.Sequence({
       content: [experiment, experimentCompleteSection],
+    });
+    const fullSequenceWithStopScreen = new lab.flow.Sequence({
+      content: [fullSequence, stopScreen],
     });
 
     experiment.on('end', () => {
@@ -146,7 +150,7 @@ define(['lab', 'sections'], function(lab, sections) {
         });
       }
     });
-    return {fullSequence, experiment};
+    return {fullSequenceWithStopScreen, fullSequence, experiment};
   }
   return {get};
 });

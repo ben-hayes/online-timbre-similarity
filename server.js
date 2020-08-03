@@ -142,7 +142,7 @@ app.post('/api/store-experiment-data', function(req, res) {
     } else if (entry.sender === 'semantic') {
       semanticResponses.push(entry);
     } else if (entry.sender === 'feedback') {
-      feedbackResponses.push(feedback);
+      feedbackResponses.push(entry);
     }
   }
 

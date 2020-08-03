@@ -463,6 +463,28 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     return experimentCompleteScreen;
   }
 
+  /**
+   * Creates the final screen for aborted experiments
+   *
+   * @return {lab.html.Screen} The final screen
+   */
+  async function stopSection() {
+    const sectionScreenTemplates = {
+      stop_screen: 'text_screen_no_continue',
+    };
+    const templates =
+        await templating.getSectionScreenTemplates(sectionScreenTemplates);
+
+    const stopScreen =
+        screens.textScreenNoContinue(templates.stop_screen);
+
+    stopScreen.on('run', () => {
+      const stopButton = document.getElementById('stop-button');
+      stopButton.style.display = 'none';
+    });
+    return stopScreen;
+  }
+
   return {
     welcomeScreens,
     auditionFiles,
@@ -474,5 +496,6 @@ define(['lab', 'templating', 'screens'], function(lab, templating, screens) {
     questionnaire,
     feedbackForm,
     experimentComplete,
+    stopSection,
   };
 });
